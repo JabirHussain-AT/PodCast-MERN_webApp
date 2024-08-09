@@ -11,7 +11,8 @@ export default {
       },
       colors : {
         primary : '#7E22CE',
-        createButton : '#211935'
+        createButton : '#211935',
+        bg_sidebar : '#F3E8FF'
       }
     },
   },
