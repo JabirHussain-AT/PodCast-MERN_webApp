@@ -4,12 +4,12 @@ import SideBar from "./SideBar";
 
 const SideBarLayout = () => {
   return (
-    <>
-      <div className="bg-red-100 w-full min-h-screen">
-            < SideBar />
-            < Outlet />
+    <div className="flex min-h-screen">
+      <SideBar />
+      <div className="flex-1 p-5">
+        <Outlet />
       </div>
-    </>
+    </div>
   );
 };
 
