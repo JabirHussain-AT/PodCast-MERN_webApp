@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import SecondNav from "../components/commonComponents/SecondNav";
+import { IoSearchCircleOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
 const ProjectFileEdit = () => {
@@ -32,7 +33,7 @@ const ProjectFileEdit = () => {
         </div>
         {/* end */}
         <div className="border border-primary rounded-md mt-5 max-h-[100%]  h-auto font-roboto text-sm ">
-          <div className="w-full flex justify-between p-2">
+          <div className="w-full flex justify-between items-center p-2">
             <button
               onClick={() => setEditMode(!editMode)}
               className="bg-gray-700 duration-500 text-white px-3 py-1 rounded-xl text-sm hover:bg-gray-900  font-roboto"
@@ -40,7 +41,7 @@ const ProjectFileEdit = () => {
               {" "}
               <span> </span> Edit Mode{" "}
             </button>
-            search // to do
+            <  IoSearchCircleOutline className="text-2xl text-primary" />
           </div>
           <p className="overflow-y-auto h-96 p-4">{temp}</p>
         </div>

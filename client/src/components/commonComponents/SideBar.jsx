@@ -101,7 +101,7 @@ const SideBar = () => {
           {/* NavLinks */}
           <div className="w-full flex-col items-center my-3 pl-3">
             {/* Upload Project Link */}
-            <div className={`w-11/12 rounded-3xl mb-2 ${activePath === `/project/${projectId}/file/edit/${fileId}` ? 'bg-primary text-white' : ' bg-gray-400' }`}>
+            <div className={`w-11/12 rounded-3xl mb-2 ${activePath === `/project/${projectId}/file/edit/${fileId}` ? 'bg-primary text-white' : ' ' }`}>
               <NavLink 
                 to={`/project/upload/${projectId}`}
                 className={({ isActive }) => 
@@ -135,7 +135,7 @@ const SideBar = () => {
         {/* Bottom Section - Settings Link */}
         <div className="w-full pl-3 pb-5 ">
           <NavLink 
-            to="/settings"
+            to="/view/settings"
             className={({ isActive }) => 
               `block w-11/12 rounded-md ${
                 isActive 
@@ -146,7 +146,7 @@ const SideBar = () => {
           >
             <div className="flex gap-3 items-center h-10">
               <span className="rounded-full pl-2 ml-3">
-                <img className="w-8" src={SettingsIcon} alt="settings" title="settings" />
+                <img className="w-8 " src={SettingsIcon} alt="settings" title="settings" />
               </span>
               <p className="text-sm font-roboto">Settings</p>
             </div>

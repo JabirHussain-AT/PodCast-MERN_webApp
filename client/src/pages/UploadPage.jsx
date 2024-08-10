@@ -7,7 +7,7 @@ import UploadInput from "../components/UploadPage/UploadInput";
 import toast from "react-hot-toast";
 
 const UploadPage = () => {
-  const uploadedItems = [{}]; // Simulate uploaded items. If there are items, populate this array.
+  const uploadedItems = []; // Simulate uploaded items. If there are items, populate this array.
   const [isOpen, setIsOpen] = useState(false);
   let projectName = "Sample Project";
 

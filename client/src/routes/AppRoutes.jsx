@@ -7,6 +7,7 @@ import NavLayout from "../components/commonComponents/NavLayout";
 import SideBarLayout from "../components/commonComponents/SideBarLayout";
 import WidgetConfigurations from "../pages/WidgetConfigurations";
 import ProjectFileEdit from "../pages/ProjectFileEdit";
+import Settings from "../pages/Settings";
 
 function AppRoutes() {
   return (
@@ -18,14 +19,28 @@ function AppRoutes() {
 
       {/* Project Section */}
       <Route path="/projects" element={<NavLayout />}>
-        <Route index element={< Projects />} />
+        <Route index element={<Projects />} />
       </Route>
 
       {/* Upload Section */}
       <Route path="project" element={<SideBarLayout />}>
-        <Route path='upload/:projectId' element={<UploadPage />} />
-        <Route path=':projectId/file/edit/:fileId' element={< ProjectFileEdit />} />
-        <Route path='widget/config/:projectId' element={< WidgetConfigurations />} />
+        <Route path="upload/:projectId" element={<UploadPage />} />
+        <Route
+          path=":projectId/file/edit/:fileId"
+          element={<ProjectFileEdit />}
+        />
+        <Route
+          path="widget/config/:projectId"
+          element={<WidgetConfigurations />}
+        />
+      </Route>
+
+      {/* settings */}
+      <Route path="view" element={<SideBarLayout />}>
+        <Route
+          path="settings"
+          element={< Settings />}
+        />
       </Route>
     </Routes>
   );

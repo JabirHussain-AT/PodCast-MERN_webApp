@@ -15,7 +15,7 @@ const NavBar = () => {
 
       {/* Icon section */}
       <div className=" flex justify-center items-center ">
-        <NavLink to="/settings">
+        <NavLink to="/view/settings">
           <img
             className="w-7 h-7 m-3 cursor-pointer hover:scale-110 duration-300 "
             src={SettingsIcon}
