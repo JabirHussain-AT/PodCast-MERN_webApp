@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BACKEND_URL } from "../config/constants.js";
 import { config } from "../config/config.js";
+import toast from "react-hot-toast";
 
 
 const Home = () => {
