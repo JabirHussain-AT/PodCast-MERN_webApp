@@ -32,7 +32,7 @@ const Projects = () => {
     };
 
     fetchProjects();
-  }, []);
+  }, [setIsOpen]);
 
   //Project Details Modal Opening phase
   function handleCreateModal() {
