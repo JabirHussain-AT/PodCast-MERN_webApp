@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 const verifyUserAuth = (req, res, next) => {
 
   const token = req.cookies.user_jwt;
-  console.log(token)
+  console.log(token,'000000000000',req.cookies)
   const secret = process.env.JWT_SECRET;
   
   // Check if token exists
@@ -18,7 +18,6 @@ const verifyUserAuth = (req, res, next) => {
     // Verify the token
     jwt.verify(token, secret, async (err, decodedUser) => {
         if (err) {
-            console.log(secret,'=======================================',err)
             return res
             .status(401)
             .json({ success: false, message: "Invalid token!" });
