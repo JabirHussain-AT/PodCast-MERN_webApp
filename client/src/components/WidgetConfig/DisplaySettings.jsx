@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import { FiUpload } from "react-icons/fi";
 import axios from "axios";
+import {config} from '../../config/config'
+import { BACKEND_URL } from '../../config/constants'
 import toast from "react-hot-toast";
+import { useParams } from "react-router-dom";
 
 const DisplaySettings = () => {
+  const { projectId } = useParams()
   const [fontSize, setFontSize] = useState("");
   const [chatHeight, setChatHeight] = useState("");
   const [primaryColor, setPrimaryColor] = useState("#000000");
@@ -13,21 +17,42 @@ const DisplaySettings = () => {
   const [screenPosition, setScreenPosition] = useState("bottom-right");
   const [distanceFromBottom, setDistanceFromBottom] = useState("");
   const [horizontalDistance, setHorizontalDistance] = useState("");
-  const [botIcon, setBotIcon] = useState(null);
+  const [botIcon, setBotIcon] = useState('');
   const [isUploading, setIsUploading] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false); // Add this state
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleImageUpload = (e) => {
+
+  //handling imageuplaod 
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (file) {
       setIsUploading(true);
-      // Simulate an upload process
-      setTimeout(() => {
-        setBotIcon(URL.createObjectURL(file));
+  
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", import.meta.env.VITE_CLOUDINERY_UPLOAD_PRESET);
+  
+      try {
+        const response = await fetch(
+          `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINERY_UPLOAD_SECRET}/upload`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+  
+        const data = await response.json();
+        setBotIcon(data.secure_url); 
+        toast.success("Image uploaded successfully!");
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        toast.error("Failed to upload image. Please try again.");
+      } finally {
         setIsUploading(false);
-      }, 1000);
+      }
     }
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -67,11 +92,11 @@ const DisplaySettings = () => {
       botIcon,
     };
     try {
-      const result = await axios.post("your-api-endpoint", formData);
+      const result = await axios.post(`${ BACKEND_URL }/api/widget/display/${projectId}`, formData , config);
       if (result?.data?.success) {
-        toast.success("Settings saved successfully!");
+        toast.success("widget config saved successfully!");
       } else {
-        toast.error("Settings not saved successfully!");
+        toast.error("widget config not saved successfully!");
       }
     } catch (error) {
       console.error("Error saving settings:", error);
@@ -88,7 +113,7 @@ const DisplaySettings = () => {
         <label className="block font-roboto font-semibold w-1/3">
           Primary Color
         </label>
-        <div className="w-full  items-center">
+        <div className="w-full items-center">
           <input
             required
             type="text"

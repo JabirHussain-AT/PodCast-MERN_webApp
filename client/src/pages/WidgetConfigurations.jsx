@@ -5,6 +5,10 @@ import Loading from "../components/commonComponents/Loading";
 import InputField from "../components/commonComponents/InputFiled";
 import TabSwitch from "../components/commonComponents/TabSwitch";
 import DisplaySettings from "../components/WidgetConfig/DisplaySettings";
+import { BACKEND_URL } from "../config/constants";
+import { config } from "../config/config";
+import toast from "react-hot-toast";
+import { useParams } from "react-router-dom";
 
 const WidgetConfigurations = () => {
   const [activeTab, setActiveTab] = useState("General");
@@ -13,7 +17,7 @@ const WidgetConfigurations = () => {
     welcomeMessage: "",
     inputPlaceholder: "",
   });
-
+  const { projectId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
@@ -22,7 +26,7 @@ const WidgetConfigurations = () => {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
-  //validation
+  // Form validation
   const validateForm = () => {
     const newErrors = {};
     Object.entries(formData).forEach(([key, value]) => {
@@ -40,19 +44,25 @@ const WidgetConfigurations = () => {
 
     setIsLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500)); // Half-second delay
-      const response = await axios.post("/api/submit", formData);
-      console.log(response.data);
-      // Handle success (e.g., show a success message)
+      const result = await axios.post(
+        `${BACKEND_URL}/api/widget/display/${projectId}`,
+        formData,
+        config
+      );
+      if (result?.data?.success) {
+        toast.success("Widget config saved successfully!");
+      } else {
+        toast.error("Widget config not saved successfully!");
+      }
     } catch (error) {
-      console.error("Error submitting data:", error);
-      // Handle error (e.g., show an error message)
+      console.error("Error saving settings:", error);
+      toast.error("Failed to save settings. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  //spinning overlay
+  // Spinning overlay component
   const LoadingOverlay = () => (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white p-4 rounded-lg">
@@ -64,19 +74,19 @@ const WidgetConfigurations = () => {
   return (
     <div>
       {isLoading && <LoadingOverlay />}
-      {/* nav */}
+      {/* Navigation */}
       <SecondNav
         projectName={"Sample Project"}
         pageName={"Widget Configuration"}
       />
-      {/* head */}
+      {/* Header */}
       <div className="min-w-full">
         <h1 className="font-roboto font-bold text-2xl text-primary my-8">
           Configuration
         </h1>
       </div>
 
-      {/* tabs */}
+      {/* Tabs */}
       <TabSwitch
         tabs={["General", "Display", "Advanced"]}
         activeTab={activeTab}
@@ -113,13 +123,15 @@ const WidgetConfigurations = () => {
             className="bg-primary text-white font-roboto font-semibold py-2 px-4 rounded"
             disabled={isLoading}
           >
-            {"Submit"}
+            Submit
           </button>
         </form>
       )}
 
       {activeTab === "Display" && <DisplaySettings />}
-      {activeTab === "Advanced" && <h1 className="text-roboto text-primary">On Progress...</h1>}
+      {activeTab === "Advanced" && (
+        <h1 className="text-roboto text-primary">On Progress...</h1>
+      )}
     </div>
   );
 };

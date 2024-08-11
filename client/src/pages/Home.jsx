@@ -7,18 +7,45 @@ import ModalContent from "../components/Home/ModalContent.jsx";
 import { AuthContext } from "../context/AuthContext.jsx";
 import GoogleLoginContent from "../components/Home/GoogleLoginContent.jsx";
 import Loading from "../components/commonComponents/Loading.jsx";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BACKEND_URL } from "../config/constants.js";
+import { config } from "../config/config.js";
+
 
 const Home = () => {
   const { isAuthenticated, setIsAuthenticated, isLoading } =
     useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
+  const [projects, setProjects] = useState([]);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const navigate  = useNavigate()
 
   useEffect(() => {
     if (!isAuthenticated) {
       setShowAuthModal(true);
     }
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const result = await axios.get(`${BACKEND_URL}/api/project`, config);
+
+        if (result?.data?.success) {
+          const projectData = result?.data?.data;
+          setProjects(projectData);
+        } else {
+          toast.error("Failed to load projects. Please try again later!");
+        }
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+        toast.error("Failed to load projects. Please try again later!");
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   // Project Details Modal Opening phase
   function handleCreateModal() {
@@ -51,11 +78,13 @@ const Home = () => {
 
   return (
     <>
-    {/*  */}
+      {/*  */}
       {isLoading && (
         <div className="fixed rounded-md inset-0 bg-black bg-opacity-30  backdrop-blur-sm flex justify-center items-center ">
           <div className="w-[600px]  bg-white rounded-md p-2 ">
-            <div className="bg-white p-2 text-black">< Loading /> </div>
+            <div className="bg-white p-2 text-black">
+              <Loading />{" "}
+            </div>
           </div>
         </div>
       )}
@@ -78,7 +107,15 @@ const Home = () => {
             {/* Button Sec */}
             <div className="flex justify-center items-start font-roboto">
               <CreateButton clickFunction={handleCreateModal} />
-
+              { projects?.length > 0 && (
+                <button
+                  className="bg-primary text-white px-5 py-2 rounded-md mx-3 hover:scale-105 duration-500 font-roboto "
+                  onClick={() => navigate("/projects ")}
+                >
+                  {" "}
+                  Show Projects{" "}
+                </button>
+              )}
               {isOpen && (
                 <ModalBox isOpen={isOpen}>
                   <ModalContent onClose={handleModalClose} />

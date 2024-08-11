@@ -2,6 +2,8 @@ import React from "react";
 import AddIcon from '../../assets/Home/AddIcon.png'
 
 const CreateButton = ({ clickFunction }) => {
+  
+
   return (
     <button
       onClick={clickFunction}
