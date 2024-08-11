@@ -40,11 +40,12 @@ export const login = async (req, res) => {
   
       res.cookie("user_jwt", token, {
         httpOnly: true,
+        secure : 'none',
         sameSite: 'none', // Allows cross-site cookie access
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         path: '/', // Ensure the cookie is accessible for all paths
       });
-      
+
       // Sending response
       res.status(201).json({ 
         message: "User logged in successfully", 
