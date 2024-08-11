@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 const verifyUserAuth = (req, res, next) => {
 
   const token = req.cookies.user_jwt;
+  console.log(token)
   const secret = process.env.JWT_SECRET;
   
   // Check if token exists
