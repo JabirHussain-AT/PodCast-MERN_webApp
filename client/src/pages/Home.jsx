@@ -41,7 +41,7 @@ const Home = () => {
         }
       } catch (error) {
         console.error("Error fetching projects:", error);
-        toast.error("Failed to load projects. Please try again later!");
+        // toast.error("Failed to load projects. Please try again later!");
       }
     };
 
