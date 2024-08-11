@@ -15,7 +15,7 @@ const GoogleLoginContent = ({ onClose, onAuthSuccess }) => {
     try {
       // Send the credential to your backend
       const USER_CREDENTIAL = jwtDecode(credentialResponse.credential );
-      console.log(USER_CREDENTIAL,'------------------------------')
+
       
       const response = await axios.post(`${BACKEND_URL}/api/auth/login`, {
         email: USER_CREDENTIAL?.email,
