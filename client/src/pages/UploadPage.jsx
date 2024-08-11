@@ -66,7 +66,7 @@ const UploadPage = () => {
       </ModalBox>
       {/*  */}
       <div className="w-full flex justify-start items-center ">
-        <div className="w-11/12 my-10 ml-1">
+        <div className="w-11/12 mt-10 mb-t ml-1">
           <h1 className="font-bold text-2xl font-roboto text-primary ">
             {uploadedItems?.length < 1
               ? "Uploads"

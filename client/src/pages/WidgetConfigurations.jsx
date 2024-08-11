@@ -71,7 +71,7 @@ const WidgetConfigurations = () => {
       />
       {/* head */}
       <div className="min-w-full">
-        <h1 className="font-roboto font-bold text-3xl text-primary my-8">
+        <h1 className="font-roboto font-bold text-2xl text-primary my-8">
           Configuration
         </h1>
       </div>
