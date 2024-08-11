@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import Loading from "../commonComponents/Loading";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BACKEND_URL } from "../../config/constants";
+import { config } from "../../config/config";
+import toast from "react-hot-toast";
 
 const ModalContent = ({ onClose }) => {
   const navigate = useNavigate();
@@ -8,21 +12,24 @@ const ModalContent = ({ onClose }) => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (projectName.trim().length < 3) {
-        console.log('heeeeeeee')
       setError("Project name must be at least 3 characters long");
       return;
     }
-
+    
     setIsLoading(true);
-
+    //function to post
+    const result = await axios.post( `${ BACKEND_URL }/api/project/create`,{ projectName : projectName } ,config )
+    if( result?.data?.success){
+      toast.success( 'project created ' )
+    }
     setTimeout(() => {
-      console.log(projectName);
       setProjectName("");
       onClose();
     }, 1500);
+
 
     navigate("/projects");
   };

@@ -3,23 +3,25 @@ import jwt from 'jsonwebtoken';
 
 // Middleware to verify user authentication
 const verifyUserAuth = (req, res, next) => {
+
   const token = req.cookies.user_jwt;
   const secret = process.env.JWT_SECRET;
-
+  
   // Check if token exists
   if (!token) {
-    return res
+      return res
       .status(401)
       .json({ success: false, message: "Current user is not authenticated!" });
-  }
-
-  // Verify the token
-  jwt.verify(token, secret, async (err, decodedUser) => {
-    if (err) {
-      return res
-        .status(401)
-        .json({ success: false, message: "Invalid token!" });
-    } else {
+    }
+    
+    // Verify the token
+    jwt.verify(token, secret, async (err, decodedUser) => {
+        if (err) {
+            console.log(secret,'=======================================',err)
+            return res
+            .status(401)
+            .json({ success: false, message: "Invalid token!" });
+        } else {
       req.decodedUser = decodedUser;
       // Proceed to the next middleware or route handler
       next();

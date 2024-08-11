@@ -17,13 +17,13 @@ const ConfirmationModal = ({ isOpen, onConfirm, onCancel, children }) => {
           <div className="flex justify-center gap-4">
             <button
               onClick={onConfirm}
-              className="py-2 px-4 bg-green-500 text-white rounded"
+              className="py-2 px-6 hover:scale-110 duration-500 bg-primary text-white rounded"
             >
               Yes
             </button>
             <button
               onClick={onCancel}
-              className="py-2 px-4 bg-gray-300 rounded"
+              className="py-2 px-6  hover:scale-110 duration-500 bg-gray-300 rounded"
             >
               No
             </button>

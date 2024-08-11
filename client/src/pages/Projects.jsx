@@ -1,47 +1,40 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ModalBox from "../components/commonComponents/ModalBox";
 import ModalContent from "../components/Home/ModalContent";
 import BacktoHome from "../components/commonComponents/BacktoHome";
 import CreateButton from "../components/Home/CreateButton";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BACKEND_URL } from "../config/constants";
+import { config } from "../config/config";
+import toast from "react-hot-toast";
 
 const Projects = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  const [projects, setProjects] = useState([
-    {
-      projectName: "Sample Project",
-      totalEpisodes: 4,
-      update: "Last update a week Ago",
-    },
-    {
-      projectName: "Main Project",
-      totalEpisodes: 4,
-      update: "Last update a week Ago",
-    },
-    {
-      projectName: "Sample Project",
-      totalEpisodes: 4,
-      update: "Last update a week Ago",
-    },
-    {
-      projectName: "Sample Project",
-      totalEpisodes: 4,
-      update: "Last update a week Ago",
-    },
-    {
-      projectName: "Sample Project",
-      totalEpisodes: 4,
-      update: "Last update a week Ago",
-    },
-    {
-      projectName: "Sample Project",
-      totalEpisodes: 4,
-      update: "Last update a week Ago",
-    },
-  ]);
+  const [projects, setProjects] = useState([]);
 
-  //Project Detials Modal Opening phase
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const result = await axios.get(`${BACKEND_URL}/api/project`, config);
+
+        if (result?.data?.success) {
+          const projectData = result?.data?.data;
+          setProjects(projectData);
+        } else {
+          toast.error("Failed to load projects. Please try again later!");
+        }
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+        toast.error("Failed to load projects. Please try again later!");
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+  //Project Details Modal Opening phase
   function handleCreateModal() {
     setIsOpen(true);
   }
@@ -69,9 +62,13 @@ const Projects = () => {
         </div>
         {/* main section */}
         <div className="w-full md:h-96 flex-wrap flex justify-between gap-3 items-center">
-          {projects && projects?.length > 1 ? (
-            projects?.map((item, index) => (
-              <div onClick={ () => navigate(`/project/upload/${ index }`) } className="w-5/12 md:w-3/12  flex items-center border shadow-lg border-black rounded-md min-h-24 hover:scale-110 duration-300 cursor-pointer hover:shadow-xl">
+          {projects && projects.length > 0 ? (
+            projects.map((item, index) => (
+              <div
+                key={item?._id}
+                onClick={() => navigate(`/project/upload/${item?._id}`)}
+                className="w-5/12 md:w-3/12  flex items-center border shadow-lg border-black rounded-md min-h-24 hover:scale-110 duration-300 cursor-pointer hover:shadow-xl"
+              >
                 <div
                   className={`m-2 rounded-md w-1/4 h-16 ${
                     index % 2 === 1 ? "bg-primary" : "bg-orange-500"
@@ -79,26 +76,32 @@ const Projects = () => {
                 >
                   <h2 className="font-bold font-roboto text-lg md:text-3xl pt-4 text-white flex justify-center items-center">
                     {item?.projectName
-                      .split(" ")
-                      .map((word) => word[0])
-                      .join("")
-                      .toUpperCase()}
+                      ? item.projectName
+                          .split(" ")
+                          .map((word) => word[0])
+                          .join("")
+                          .toUpperCase()
+                      : ""}
                   </h2>
                 </div>
                 <div className="font-roboto ml-2">
                   <h1 className="text-md font-semibold text-primary">
                     {item?.projectName}
                   </h1>
-                  <p className="text-xs"> {item?.totalEpisodes} Episodes</p>
                   <p className="text-[10px] text-gray-500 mt-3">
-                    {" "}
-                    {item?.update}{" "}
+                    {item?.updatedAt && new Date(item.updatedAt).toLocaleDateString()}
                   </p>
                 </div>
               </div>
             ))
           ) : (
-            <div>No projects available</div>
+            <div className="flex items-center justify-center min-h-screen">
+              <div className="text-center">
+                <p className="text-xl font-roboto text-gray-500">
+                  No projects available
+                </p>
+              </div>
+            </div>
           )}
         </div>
       </div>

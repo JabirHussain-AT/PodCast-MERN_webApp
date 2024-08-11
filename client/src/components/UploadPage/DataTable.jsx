@@ -1,41 +1,45 @@
 import React, { useState } from "react";
-import { IoCloseCircleSharp } from "react-icons/io5";
+import { format } from 'date-fns';
 import axios from "axios";
-import ConfirmationModal from "../commonComponents/ConfirmationModal"; // Importing the ConfirmationModal component
+import ConfirmationModal from "../commonComponents/ConfirmationModal";
 import { useNavigate, useParams } from "react-router-dom";
+import { config } from "../../config/config";
+import { BACKEND_URL } from "../../config/constants";
 
 const DataTable = ({ dataUploaded, onDelete }) => {
-  const navigate = useNavigate()
-  const { projectId } = useParams()
+  const navigate = useNavigate();
+  const { projectId } = useParams();
   const [deletingId, setDeletingId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+
+
   const handleDeleteClick = (id) => {
     setDeletingId(id);
-    setIsModalOpen(true); // Open the confirmation modal
+    setIsModalOpen(true);
   };
 
-  const handleDeleteConfirm = () => {
-    axios
-      .delete(`your-api-endpoint/${deletingId}`)
-      .then((response) => {
-        onDelete(deletingId); // Remove the item from the state after successful deletion
-        setDeletingId(null);
-        setIsModalOpen(false); // Close the confirmation modal
-      })
-      .catch((error) => {
-        console.error("There was an error deleting the item!", error);
-        setIsModalOpen(false); // Close the confirmation modal
-      });
+
+
+  const handleDeleteConfirm = async () => {
+    try {
+      await axios.delete(`${BACKEND_URL}/api/project/${projectId}/file/${deletingId}`,config);
+      onDelete(deletingId); 
+      setIsModalOpen(false); 
+    } catch (error) {
+      console.error("There was an error deleting the item!", error);
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   const handleDeleteCancel = () => {
     setDeletingId(null);
-    setIsModalOpen(false); // Close the confirmation modal
+    setIsModalOpen(false); 
   };
 
   return (
-    <div className=" rounded-lg border-black border">
+    <div className="rounded-lg border-black border">
       <table className="min-w-full bg-white">
         <thead>
           <tr className="border-b-2">
@@ -46,31 +50,37 @@ const DataTable = ({ dataUploaded, onDelete }) => {
           </tr>
         </thead>
         <tbody>
-          {dataUploaded.map((item) => (
-            <tr key={item.id} className="border-b-2">
-              <td className="py-2">{item.name}</td>
-              <td className="py-2">{item.uploadDate}</td>
-              <td className="py-2">{item.status}</td>
-              <td className="flex justify-end">
-                <button
-                  className="py-2 px-3 border"
-                  onClick={() => navigate(`/project/${projectId}/file/edit/3`)}
-                >
-                  Edit
-                </button>
-                <button
-                  className="py-2 text-red-700 px-2 border mr-10"
-                  onClick={() => handleDeleteClick(item.id)}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
+          {dataUploaded.map((item) => {
+            const formattedDate = item?.updatedAt
+              ? format(new Date(item.updatedAt), "MMMM d, yyyy h:mm:ss a")
+              : "N/A";
+            return (
+              <tr key={item?._id} className="border-b-2 text-center">
+                <td className="py-2">{item?.fileName}</td>
+                <td className="py-2">{formattedDate}</td>
+                <td className="py-2">{item?.status}</td>
+                <td className="flex justify-end">
+                  <button
+                    className="py-2 pr-3 border"
+                    onClick={() =>
+                      navigate(`/project/${projectId}/file/edit/${item?._id}`)
+                    }
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="py-2 text-red-700 px-2 border mr-10"
+                    onClick={() => handleDeleteClick(item._id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
 
-      {/* Confirmation Modal */}
       <ConfirmationModal
         isOpen={isModalOpen}
         onConfirm={handleDeleteConfirm}

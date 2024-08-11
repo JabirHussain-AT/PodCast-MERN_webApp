@@ -3,7 +3,7 @@ import { RiCloseLargeFill } from "react-icons/ri";
 import { FaYoutube } from "react-icons/fa";
 import Loading from "../../components/commonComponents/Loading";
 
-const UploadInput = ({ onClose, onUpdate }) => {
+const UploadInput = ({ onClose, onUpdate , icon ,text }) => {
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -40,8 +40,9 @@ const UploadInput = ({ onClose, onUpdate }) => {
     <div className="bg-white p-6 rounded-lg shadow-lg">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center">
-          <FaYoutube className="text-red-600 text-2xl mr-2" />
-          <h2 className="text-xl font-bold">Upload from YouTube</h2>
+          {/* <FaYoutube className="text-red-600 text-2xl mr-2" /> */}
+          < img src={ icon } className="w-7 h-7" alt='icon' />
+          <h2 className="text-xl font-bold">{ text }</h2>
         </div>
         <RiCloseLargeFill
           onClick={onClose}

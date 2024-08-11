@@ -8,39 +8,40 @@ import SideBarLayout from "../components/commonComponents/SideBarLayout";
 import WidgetConfigurations from "../pages/WidgetConfigurations";
 import ProjectFileEdit from "../pages/ProjectFileEdit";
 import Settings from "../pages/Settings";
+import ProtectedRoute from "./ProtectedRoutes";
 
 function AppRoutes() {
   return (
     <Routes>
-      {/* Home Section */}
+      {/* Home Section (public) */}
       <Route path="/" element={<NavLayout />}>
         <Route index element={<Home />} />
       </Route>
 
-      {/* Project Section */}
-      <Route path="/projects" element={<NavLayout />}>
-        <Route index element={<Projects />} />
-      </Route>
+      {/* Protected Routes */}
+      <Route element={<ProtectedRoute />}>
+        {/* Project Section */}
+        <Route path="/projects" element={<NavLayout />}>
+          <Route index element={<Projects />} />
+        </Route>
 
-      {/* Upload Section */}
-      <Route path="project" element={<SideBarLayout />}>
-        <Route path="upload/:projectId" element={<UploadPage />} />
-        <Route
-          path=":projectId/file/edit/:fileId"
-          element={<ProjectFileEdit />}
-        />
-        <Route
-          path="widget/config/:projectId"
-          element={<WidgetConfigurations />}
-        />
-      </Route>
+        {/* Upload Section */}
+        <Route path="project" element={<SideBarLayout />}>
+          <Route path="upload/:projectId" element={<UploadPage />} />
+          <Route
+            path=":projectId/file/edit/:fileId"
+            element={<ProjectFileEdit />}
+          />
+          <Route
+            path="widget/config/:projectId"
+            element={<WidgetConfigurations />}
+          />
+        </Route>
 
-      {/* settings */}
-      <Route path="view" element={<SideBarLayout />}>
-        <Route
-          path="settings"
-          element={< Settings />}
-        />
+        {/* Settings */}
+        <Route path="view" element={<SideBarLayout />}>
+          <Route path="settings" element={<Settings />} />
+        </Route>
       </Route>
     </Routes>
   );
