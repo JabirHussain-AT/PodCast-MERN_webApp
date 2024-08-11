@@ -5,7 +5,7 @@ import dotenv from 'dotenv'
 dotenv.config();
 
 //connecting mongodb
-mongoose.connect(process.env.MONGO_HOST)
+mongoose.connect(String(process.env.MONGO_HOST))
   .then(() => {
     console.log("MongoDB connected");
   })
